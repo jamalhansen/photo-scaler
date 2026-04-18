@@ -37,9 +37,9 @@ def test_scale_image_no_scale_needed(tmp_path):
     # Small image
     img_path = create_test_image(tmp_path, 500, 500, name="small.jpg")
     
-    # If no suffix and already jpg, should return None
+    # If no suffix and already jpg, should return the original path
     out_path = scale_image(img_path, max_dim=1000)
-    assert out_path is None
+    assert out_path == img_path
 
 def test_scale_image_dry_run(tmp_path):
     img_path = create_test_image(tmp_path, 2000, 2000)
