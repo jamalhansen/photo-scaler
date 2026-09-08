@@ -13,7 +13,7 @@ dependencies = [
 ]
 
 [project.scripts]
-scale-photo = "photo_scaler.logic:app"
+scale-photo = "photo_scaler.cli:app"
 
 [build-system]
 requires = ["hatchling"]

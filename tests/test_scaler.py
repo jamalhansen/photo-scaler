@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from PIL import Image
-from photo_scaler.logic import ImageReadError, scale_image, scale_image_or_raise
+from photo_scaler.core import ImageReadError, scale_image, scale_image_or_raise
 
 
 def create_test_image(tmp_path: Path, width: int, height: int, name: str = "test.png"):
