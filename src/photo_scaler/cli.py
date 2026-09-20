@@ -1,20 +1,20 @@
 import sys
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Annotated
 
 import typer
+from local_first_common.cli import (
+    dry_run_option,
+    init_config_option,
+    model_option,
+    pipe_option,
+    provider_option,
+    resolve_dry_run,
+)
+from local_first_common.tracking import register_tool
 from rich.console import Console
 from rich.panel import Panel
 
-from local_first_common.cli import (
-    dry_run_option,
-    resolve_dry_run,
-    pipe_option,
-    init_config_option,
-    provider_option,
-    model_option,
-)
-from local_first_common.tracking import register_tool
 from .core import (
     PhotoScalerError,
     scale_image_or_raise,
@@ -31,7 +31,7 @@ app = typer.Typer(help="Resizes images and saves as optimized JPEG.")
 @app.command()
 def scale(
     path: Annotated[
-        Optional[Path], typer.Argument(help="File or directory to scale")
+        Path | None, typer.Argument(help="File or directory to scale")
     ] = None,
     max_dim: Annotated[
         int, typer.Option("--max", help="Maximum dimension (width or height)")
@@ -46,7 +46,7 @@ def scale(
         ),
     ] = "",
     provider_name: Annotated[str, provider_option()] = "ollama",
-    model: Annotated[Optional[str], model_option()] = None,
+    model: Annotated[str | None, model_option()] = None,
     dry_run: Annotated[bool, dry_run_option()] = False,
     pipe: Annotated[bool, pipe_option()] = False,
     init_config: Annotated[bool, init_config_option(TOOL_NAME, DEFAULTS)] = False,

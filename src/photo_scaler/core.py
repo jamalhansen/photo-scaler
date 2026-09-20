@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
 
 from PIL import Image
 from rich.console import Console
@@ -40,7 +39,7 @@ def scale_image_or_raise(
     """
     try:
         img = Image.open(image_path)
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         raise ImageReadError(f"Could not open image {image_path.name}: {e}") from e
 
     orig_w, orig_h = img.size
@@ -69,7 +68,7 @@ def scale_image_or_raise(
 
     out_path = image_path.parent / out_name
 
-    if not scale_needed and image_path.suffix.lower() == ".jpg" and not suffix:
+    if not scale_needed and image_path.suffix.lower() in (".jpg", ".jpeg") and not suffix:
         if not silent:
             console.print(
                 f"[dim]No scaling or format change needed for {image_path.name}[/dim]"
@@ -92,8 +91,19 @@ def scale_image_or_raise(
 
     try:
         img.save(out_path, "JPEG", quality=quality, optimize=True)
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         raise ImageWriteError(f"Could not save {out_name}: {e}") from e
+
+    # Output is always JPEG regardless of input extension (.jpeg, .png, .heic,
+    # ...), so out_path only equals image_path when the input was already
+    # literally named .jpg. Any other extension means a second file was just
+    # created alongside the original -- "overwrites in place unless --suffix"
+    # (photo-pipeline's own contract) requires removing the original here,
+    # not leaving both. Found 2026-09-20: every non-.jpg photo through the
+    # real pipeline was silently doubling on disk (a full-size original next
+    # to the scaled copy) since this was missing.
+    if not suffix and out_path != image_path:
+        image_path.unlink(missing_ok=True)
 
     if not silent:
         console.print(
@@ -109,7 +119,7 @@ def scale_image(
     suffix: str = "",
     dry_run: bool = False,
     silent: bool = False,
-) -> Optional[Path]:
+) -> Path | None:
     """Compatibility wrapper for callers that expect Optional[Path]."""
     try:
         result = scale_image_or_raise(
