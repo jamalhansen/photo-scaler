@@ -70,9 +70,7 @@ def scale_image_or_raise(
 
     if not scale_needed and image_path.suffix.lower() in (".jpg", ".jpeg") and not suffix:
         if not silent:
-            console.print(
-                f"[dim]No scaling or format change needed for {image_path.name}[/dim]"
-            )
+            console.print(f"[dim]No scaling or format change needed for {image_path.name}[/dim]")
         return ScaleImageResult(path=image_path, action="unchanged")
 
     if dry_run:
@@ -106,9 +104,7 @@ def scale_image_or_raise(
         image_path.unlink(missing_ok=True)
 
     if not silent:
-        console.print(
-            f"[green]Successfully saved {out_path.name} ({new_w}x{new_h})[/green]"
-        )
+        console.print(f"[green]Successfully saved {out_path.name} ({new_w}x{new_h})[/green]")
     return ScaleImageResult(path=out_path, action="scaled")
 
 

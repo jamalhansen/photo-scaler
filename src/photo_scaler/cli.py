@@ -30,20 +30,12 @@ app = typer.Typer(help="Resizes images and saves as optimized JPEG.")
 
 @app.command()
 def scale(
-    path: Annotated[
-        Path | None, typer.Argument(help="File or directory to scale")
-    ] = None,
-    max_dim: Annotated[
-        int, typer.Option("--max", help="Maximum dimension (width or height)")
-    ] = 1200,
-    quality: Annotated[
-        int, typer.Option("--quality", help="JPEG quality (1-100)")
-    ] = 85,
+    path: Annotated[Path | None, typer.Argument(help="File or directory to scale")] = None,
+    max_dim: Annotated[int, typer.Option("--max", help="Maximum dimension (width or height)")] = 1200,
+    quality: Annotated[int, typer.Option("--quality", help="JPEG quality (1-100)")] = 85,
     suffix: Annotated[
         str,
-        typer.Option(
-            "--suffix", help="Suffix to add to output filename (e.g. -scaled)"
-        ),
+        typer.Option("--suffix", help="Suffix to add to output filename (e.g. -scaled)"),
     ] = "",
     provider_name: Annotated[str, provider_option()] = "ollama",
     model: Annotated[str | None, model_option()] = None,
@@ -112,13 +104,9 @@ def scale(
 
     if not pipe:
         if not dry_run:
-            console.print(
-                f"\n[bold green]Done! Processed {scaled_count} images.[/bold green]"
-            )
+            console.print(f"\n[bold green]Done! Processed {scaled_count} images.[/bold green]")
         else:
-            console.print(
-                f"\n[yellow][dry-run] Would have processed {scaled_count} images.[/yellow]"
-            )
+            console.print(f"\n[yellow][dry-run] Would have processed {scaled_count} images.[/yellow]")
 
 
 if __name__ == "__main__":
