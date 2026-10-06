@@ -79,6 +79,7 @@ def test_suffix_mode_keeps_original_alongside_the_copy(tmp_path):
     img_path = create_test_image(tmp_path, 2000, 1000, name="photo.jpeg")
 
     out_path = scale_image(img_path, max_dim=1000, suffix="-scaled")
+    assert out_path is not None
     assert out_path.name == "photo-scaled.jpg"
     assert img_path.exists()
     assert out_path.exists()
